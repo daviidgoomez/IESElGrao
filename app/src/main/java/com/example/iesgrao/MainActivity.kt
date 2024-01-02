@@ -2,14 +2,14 @@ package com.example.iesgrao
 
 import android.content.Intent
 import android.media.Image
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxScopeInstance.align
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScopeInstance.align
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +27,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -39,20 +40,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 
@@ -67,7 +74,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     LoginScreen(onLoginClicked = {_, _ -> })
-                    linkPage()
+                   // linkPage()
+                    TitleText()
                 }
             }
         }
@@ -83,6 +91,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
    // var isPasswordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+
 
     Column(
         modifier = Modifier
@@ -142,8 +151,19 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
         // Botón de inicio de sesión
         Button(
             onClick = {
-              // Próxima lógica para pasar de pantalla
-                onLoginClicked(username, password)
+                if (username.length > 20) {
+                    errorMessage = "El nombre de usuario no puede tener más de 20 caracteres"
+                } else if (password.length > 16) {
+                    errorMessage = "La contraseña no puede tener más de 16 caracteres"
+                } else if (username.length < 4) {
+                    errorMessage = "Tu nombre de usuario debe ser de al menos 4 caracteres"
+                } else if (password.length < 8) {
+                    errorMessage = "La contraseña no puede tener menos de 8 caracteres"
+                } else {
+                    errorMessage = null
+                    // Próxima lógica para pasar de pantalla
+                    onLoginClicked(username, password)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -163,7 +183,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
         }
         
         // Mostrar errores (si hay)
-        errorMessage?.let { 
+        errorMessage?.let {
             Text(
                 text = it,
                 color = Color.Red,
@@ -173,6 +193,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
                     .alpha(0.8f)
             )
         }
+
         Spacer(modifier = Modifier.weight(1f))
         // Enlace o texto adicional (puede ser un enlace "¿Olvidaste tu contraseña?")
     Row(
@@ -190,10 +211,12 @@ fun linkPage() {
     // Obtener el contexto local
     val context = LocalContext.current
 
-    // Crear un AnnotatedString con un estilo de texto y un enlace
-
+    // Crear un AnnotatedString con un testily de texto y un enlace
     val text = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = Color.Blue)) {
+        withStyle(style =
+        SpanStyle(
+            color = Color.Red,
+            textDecoration = TextDecoration.Underline)) {
             append("Haz clic aquí para visitar nuestra página web. ")
             addStringAnnotation(
                 tag = "URL",
@@ -204,24 +227,50 @@ fun linkPage() {
         }
     }
     ClickableText(text = text,
-        modifier = Modifier.padding(16.dp, top = 600.dp),
-        
-         onClick = {
-        offset ->
-        text.getStringAnnotations(tag = "URL", start = offset,
-            end = offset).firstOrNull().let { annotation ->
-            val intent = Intent(Intent.ACTION_VIEW)
-            context.startActivity(intent)
-        }
-    })
+        modifier = Modifier
+            .padding(16.dp, top = 30.dp),
+                onClick = {
+                offset ->
+            text.getStringAnnotations(tag = "URL", start = offset,
+                end = offset).firstOrNull().let { annotation ->
+              //  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+            //    context.startActivity(intent)
+            }
+        })
 }
 
+@Composable
+fun TitleText() {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        val title = createRef()
+
+        Text(
+            text = "IES El Grao",
+            modifier = Modifier
+                .constrainAs(title) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .padding(8.dp), // Añadir relleno para mejorar la apariencia
+            style = LocalTextStyle.current.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     IESGRAOTheme {
         LoginScreen(onLoginClicked = {_, _ -> })
-        linkPage()
+       // linkPage()
+        TitleText()
     }
 }
