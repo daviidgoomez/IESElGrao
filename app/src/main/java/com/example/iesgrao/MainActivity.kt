@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,6 +78,7 @@ class MainActivity : ComponentActivity() {
                     LoginScreen(onLoginClicked = {_, _ -> })
                    // linkPage()
                     TitleText()
+                    InformationText()
                 }
             }
         }
@@ -240,6 +243,46 @@ fun linkPage() {
 }
 
 @Composable
+fun InformationText() {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+
+        val (text, divider, divider2) = createRefs()
+        Divider(
+            modifier = Modifier.padding(bottom = 5.dp)
+                .height(2.dp).constrainAs(divider) {
+                    bottom.linkTo(text.top)
+                },
+            color = Color.Gray
+        )
+
+        Divider(
+            modifier = Modifier.padding(bottom = 90.dp)
+                .height(2.dp).constrainAs(divider2) {
+                    bottom.linkTo(text.bottom)
+                },
+            color = Color.Gray
+        )
+
+
+        Text("Per a l'alumnat, el nom d'usuari coincideix amb el " +
+                "NIA i la contrasenya són les tres primeres lletres del " +
+                "cognom en minúscula seguides de la data de naixement, en format DDMMAA. ",
+            modifier = Modifier.padding(bottom = 100.dp).fillMaxWidth()
+                .constrainAs(text) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            })
+
+
+    }
+}
+
+@Composable
 fun TitleText() {
     ConstraintLayout(
         modifier = Modifier
@@ -272,5 +315,6 @@ fun GreetingPreview() {
         LoginScreen(onLoginClicked = {_, _ -> })
        // linkPage()
         TitleText()
+        InformationText()
     }
 }
