@@ -111,8 +111,9 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
                 .size(155.dp)
                 .align(Alignment.CenterHorizontally)
         )
+
         // Espacio en blanco entre la imagen y los campos de texto
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
         // Campo de texto para el nombre de usuario
         OutlinedTextField(
