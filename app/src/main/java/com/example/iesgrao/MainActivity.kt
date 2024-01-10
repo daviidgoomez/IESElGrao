@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,12 +41,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -76,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     LoginScreen(onLoginClicked = {_, _ -> })
-                   // linkPage()
+                    linkPageFooter()
                     TitleText()
                     InformationText()
                 }
@@ -91,11 +95,9 @@ class MainActivity : ComponentActivity() {
 fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-   // var isPasswordVisible by remember { mutableStateOf(false) }
+    // var isPasswordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +128,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
             singleLine = true, // Establece si el texto es puede ocupar una línea o más. En caso de true, solo permite una línea
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Text,
+                keyboardType = KeyboardType.Password,
                 autoCorrect = true
             ),
             leadingIcon = {
@@ -185,7 +187,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
                 Text("Iniciar sesión")
             }
         }
-        
+
         // Mostrar errores (si hay)
         errorMessage?.let {
             Text(
@@ -200,47 +202,55 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
         // Enlace o texto adicional (puede ser un enlace "¿Olvidaste tu contraseña?")
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp)) {
-    }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)) {
+        }
 
 
     }
 }
 
 @Composable
-fun linkPage() {
-    // Obtener el contexto local
-    val context = LocalContext.current
+fun linkPageFooter() {
+    // Obtener el contexto
+    val uriHandler = LocalUriHandler.current
 
-    // Crear un AnnotatedString con un testily de texto y un enlace
-    val text = buildAnnotatedString {
-        withStyle(style =
-        SpanStyle(
-            color = Color.Red,
-            textDecoration = TextDecoration.Underline)) {
-            append("Haz clic aquí para visitar nuestra página web. ")
-            addStringAnnotation(
-                tag = "URL",
-                annotation = "https://portal.edu.gva.es/ieselgrao/?page_id=690&lang=es",
-                start = 13,
-                end = 37
+    ConstraintLayout(
+        modifier = Modifier.padding(12.dp, top = 5.dp)
+            .fillMaxSize()
+    ) {
+        val urlConstraint = createRef()
+
+        Row(
+            modifier = Modifier.padding(13.dp)
+                .constrainAs(urlConstraint) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            Text(
+                text = "Nuestra página web",
+                color = Color.Blue,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier
+                    .padding(5.dp, top = 22.dp)
+                    .clickable { uriHandler.openUri(uri = "https://portal.edu.gva.es/ieselgrao/?page_id=690&lang=es") }
+            )
+
+            // Segundo texto como imagen
+            Image(
+                painter = painterResource(id = R.drawable.gva),
+                contentDescription = "GVA 2024",
+                modifier = Modifier
+                    .padding(5.dp, top = 5.dp)
+                    .height(88.dp)
+                    .size(60.dp)
             )
         }
     }
-    ClickableText(text = text,
-        modifier = Modifier
-            .padding(16.dp, top = 30.dp),
-                onClick = {
-                offset ->
-            text.getStringAnnotations(tag = "URL", start = offset,
-                end = offset).firstOrNull().let { annotation ->
-              //  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
-            //    context.startActivity(intent)
-            }
-        })
 }
 
 @Composable
@@ -253,16 +263,20 @@ fun InformationText() {
 
         val (text, divider, divider2) = createRefs()
         Divider(
-            modifier = Modifier.padding(bottom = 5.dp)
-                .height(2.dp).constrainAs(divider) {
+            modifier = Modifier
+                .padding(bottom = 5.dp)
+                .height(2.dp)
+                .constrainAs(divider) {
                     bottom.linkTo(text.top)
                 },
             color = Color.Gray
         )
 
         Divider(
-            modifier = Modifier.padding(bottom = 90.dp)
-                .height(2.dp).constrainAs(divider2) {
+            modifier = Modifier
+                .padding(bottom = 90.dp)
+                .height(2.dp)
+                .constrainAs(divider2) {
                     bottom.linkTo(text.bottom)
                 },
             color = Color.Gray
@@ -272,12 +286,14 @@ fun InformationText() {
         Text("Per a l'alumnat, el nom d'usuari coincideix amb el " +
                 "NIA i la contrasenya són les tres primeres lletres del " +
                 "cognom en minúscula seguides de la data de naixement, en format DDMMAA. ",
-            modifier = Modifier.padding(bottom = 100.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(bottom = 100.dp)
+                .fillMaxWidth()
                 .constrainAs(text) {
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-            })
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                })
 
 
     }
@@ -306,6 +322,7 @@ fun TitleText() {
                 fontSize = 18.sp
             )
         )
+
     }
 }
 
@@ -314,7 +331,7 @@ fun TitleText() {
 fun GreetingPreview() {
     IESGRAOTheme {
         LoginScreen(onLoginClicked = {_, _ -> })
-       // linkPage()
+        linkPageFooter()
         TitleText()
         InformationText()
     }
