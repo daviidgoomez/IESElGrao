@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -74,15 +75,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IESGRAOTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LoginScreen(onLoginClicked = {_, _ -> })
-                    linkPageFooter()
-                    TitleText()
-                    InformationText()
+                var isAppClosed by remember { mutableStateOf(false) }
+                if (!isAppClosed) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        TitleText {
+                            isAppClosed = true
+                            finish()
+                        }
+                        LoginScreen(onLoginClicked = { _, _ -> })
+                        linkPageFooter()
+                        InformationText()
+                    }
                 }
             }
         }
@@ -125,7 +131,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
             value = username,
             onValueChange = { username = it },
             label = { Text("Introduce tu nombre de usuario") },
-            singleLine = true, // Establece si el texto es puede ocupar una línea o más. En caso de true, solo permite una línea
+            singleLine = true,// Establece si el texto es puede ocupar una línea o más. En caso de true, solo permite una línea
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password,
@@ -139,13 +145,15 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Campo de texto para la password
-        OutlinedTextField(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.CenterHorizontally),
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
             value = password,
             onValueChange = { password = it },
             label = { Text("Introduce la contraseña") },
             singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
             leadingIcon = {
                 Icon(Icons.Default.Lock, contentDescription = null)
             }
@@ -218,13 +226,15 @@ fun linkPageFooter() {
     val uriHandler = LocalUriHandler.current
 
     ConstraintLayout(
-        modifier = Modifier.padding(12.dp, top = 5.dp)
+        modifier = Modifier
+            .padding(12.dp, top = 5.dp)
             .fillMaxSize()
     ) {
         val urlConstraint = createRef()
 
         Row(
-            modifier = Modifier.padding(13.dp)
+            modifier = Modifier
+                .padding(13.dp)
                 .constrainAs(urlConstraint) {
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
@@ -283,9 +293,19 @@ fun InformationText() {
         )
 
 
-        Text("Per a l'alumnat, el nom d'usuari coincideix amb el " +
-                "NIA i la contrasenya són les tres primeres lletres del " +
-                "cognom en minúscula seguides de la data de naixement, en format DDMMAA. ",
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(
+                    fontWeight = FontWeight.Bold)) {
+                    append("Alumnos:")
+                }
+                append(" NIA como usuario, contraseña compuesta por 3 letras del apellido + fecha de nacimiento. ")
+                withStyle(style = SpanStyle(
+                    fontWeight = FontWeight.Bold)) {
+                    append("\nProfesores:")
+                }
+                append(" DNI como usuario, contraseña que se utiliza en Ítaca.")
+            },
             modifier = Modifier
                 .padding(bottom = 100.dp)
                 .fillMaxWidth()
@@ -293,21 +313,22 @@ fun InformationText() {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
-                })
+                }
+        )
+
 
 
     }
 }
 
 @Composable
-fun TitleText() {
+fun TitleText(onCloseClicked: () -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        val title = createRef()
-
+        val (title, closeButton) = createRefs()
         Text(
             text = "IES El Grao",
             modifier = Modifier
@@ -323,16 +344,35 @@ fun TitleText() {
             )
         )
 
+        IconButton(
+            onClick = onCloseClicked,
+            modifier = Modifier
+                .constrainAs(closeButton) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Cerrar"
+            )
+        }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     IESGRAOTheme {
+        var isAppClosed by remember {
+            mutableStateOf(false)
+        }
         LoginScreen(onLoginClicked = {_, _ -> })
         linkPageFooter()
-        TitleText()
+        TitleText {
+            isAppClosed = true
+        }
         InformationText()
     }
 }
