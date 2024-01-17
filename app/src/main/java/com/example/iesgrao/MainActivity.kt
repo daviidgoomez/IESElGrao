@@ -67,6 +67,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 
@@ -75,6 +78,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IESGRAOTheme {
+
                 var isAppClosed by remember { mutableStateOf(false) }
                 if (!isAppClosed) {
                     Surface(
@@ -360,6 +364,15 @@ fun TitleText(onCloseClicked: () -> Unit) {
     }
 }
 
+@Composable
+fun navigationLogin() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = NavigationActivity.LoginScreen.route) {
+        composable(NavigationActivity.LoginScreen.route) {
+
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
