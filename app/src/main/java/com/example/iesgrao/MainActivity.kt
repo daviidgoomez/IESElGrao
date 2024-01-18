@@ -5,6 +5,7 @@ import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -67,9 +68,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 
@@ -78,6 +81,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IESGRAOTheme {
+
+                val navigationController = rememberNavController()
+                NavHost(navController = navigationController,
+                    startDestination = NavigationActivity.LoginScreenMain.route) {
+                    composable(NavigationActivity.LoginScreenMain.route) {
+
+                    }
+                }
+
+
 
                 var isAppClosed by remember { mutableStateOf(false) }
                 if (!isAppClosed) {
@@ -103,9 +116,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    // var isPasswordVisible by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     Column(
@@ -171,7 +184,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
             onClick = {
                 if (username.length > 20) {
                     errorMessage = "El nombre de usuario no puede tener más de 20 caracteres"
-                } else if (password.length > 16) {
+                } else if (password.length > 20) {
                     errorMessage = "La contraseña no puede tener más de 16 caracteres"
                 } else if (username.length < 4) {
                     errorMessage = "Tu nombre de usuario debe ser de al menos 4 caracteres"
@@ -179,7 +192,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
                     errorMessage = "La contraseña no puede tener menos de 8 caracteres"
                 } else {
                     errorMessage = null
-                    // Próxima lógica para pasar de pantalla
+                    //Pasar de pantalla aquí
                     onLoginClicked(username, password)
                 }
             },
@@ -364,16 +377,6 @@ fun TitleText(onCloseClicked: () -> Unit) {
     }
 }
 
-@Composable
-fun navigationLogin() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = NavigationActivity.LoginScreen.route) {
-        composable(NavigationActivity.LoginScreen.route) {
-
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -387,5 +390,6 @@ fun GreetingPreview() {
             isAppClosed = true
         }
         InformationText()
+
     }
 }
