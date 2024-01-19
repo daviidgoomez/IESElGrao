@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
@@ -52,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 
@@ -78,7 +80,9 @@ class Home : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppStructure() {
-    Scaffold(modifier = Modifier.fillMaxSize(),
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .padding(0.dp),
         topBar = { MyTopAppBar() },
         content = { innerPadding ->
             MyContent(innerPadding)
@@ -180,9 +184,19 @@ fun MyTopAppBar() {
             IconButton(onClick = { }) { Icon(Icons.Filled.Menu, contentDescription = null) }
         },
         actions = {
-            IconButton(onClick = {}) { Icon(Icons.Filled.Add, contentDescription = null) }
+            IconButton(onClick = {}) { Icon(Icons.Filled.Info, contentDescription = null)
+            Text(text = "Info",
+                modifier = Modifier.padding(top = 29.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp)}
             Spacer(modifier = Modifier.size(6.dp))
-            IconButton(onClick = {}) { Icon(Icons.Filled.Close, contentDescription = null) }
+            IconButton(onClick = {}) { Icon(Icons.Filled.Close, contentDescription = null)
+            Text(text = "Salir",
+                modifier = Modifier.padding(top = 29.dp),
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp)}
+            Spacer(modifier = Modifier.size(6.dp))
+
         }
     )
 }

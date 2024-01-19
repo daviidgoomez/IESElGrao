@@ -105,6 +105,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(onLoginClicked = { _, _ -> })
                         linkPageFooter()
                         InformationText()
+                        AppStructure()
                     }
                 }
             }
@@ -185,7 +186,7 @@ fun LoginScreen(onLoginClicked: (String, String) -> Unit) {
                 if (username.length > 20) {
                     errorMessage = "El nombre de usuario no puede tener más de 20 caracteres"
                 } else if (password.length > 20) {
-                    errorMessage = "La contraseña no puede tener más de 16 caracteres"
+                    errorMessage = "La contraseña no puede tener más de 20 caracteres"
                 } else if (username.length < 4) {
                     errorMessage = "Tu nombre de usuario debe ser de al menos 4 caracteres"
                 } else if (password.length < 8) {
