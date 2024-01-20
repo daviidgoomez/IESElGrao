@@ -48,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -56,26 +57,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
-
-class Home : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            IESGRAOTheme {
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppStructure()
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,14 +133,15 @@ fun MyBottomNavigation() {
 fun MyContent(innerPadding: PaddingValues) {
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
-        .padding(25.dp))
+        .padding(20.dp))
+
 
 
     {
         val welcome = createRef()
 
         Column(modifier = Modifier
-            .padding(16.dp)
+            .padding(13.dp)
             .constrainAs(welcome) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
@@ -162,11 +149,10 @@ fun MyContent(innerPadding: PaddingValues) {
 
             }) {
             Spacer(modifier = Modifier.padding(17.dp))
-            Text(text = "Bienvenido a la App Oficial del IES Grao")
-
+            Text(text = "¡Bienvenido alumno!",
+                modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -218,15 +204,11 @@ fun YouTubeVideo(videoId: String) {
     )
 }
 
-
-
-
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+fun HomeStudentPreview() {
     IESGRAOTheme {
-        AppStructure()
+      //  AppStructure()
       // YouTubeVideo(videoId = "uCa9G1UBlokBKtav")
     }
 }
