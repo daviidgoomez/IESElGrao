@@ -3,12 +3,12 @@ package com.example.iesgrao
 private val StudentCredentials = mapOf(
     "11955735" to "gom180703",
     "12345555" to "dam180703",
-    "11234567" to "cms180703"
-
+    "11234567" to "cms180703",
+    "11032178" to "mol160408"
 )
 
 private val TeacherCredentials = mapOf(
-    "12345678A" to "JordiEsUnCrack"
+    "12345678J" to "SoyJordiCrack"
 )
 
 private val AdminCredentials = mapOf(
