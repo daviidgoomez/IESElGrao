@@ -1,6 +1,9 @@
+@file:Suppress("PreviewAnnotationInFunctionWithParameters")
+
 package com.example.iesgrao
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,6 +29,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -66,14 +70,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 import com.example.iesgrao.ui.theme.IESGRAOTheme
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun MyNavigationDrawer(onCloseDrawer:() -> Unit) {
+fun MyNavigationDrawer(onCloseDrawer: () -> Unit) {
     Column(modifier = Modifier.padding(8.dp)) {
         repeat(5) {
             Text(
@@ -87,13 +90,11 @@ fun MyNavigationDrawer(onCloseDrawer:() -> Unit) {
     }
 }
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppStructure() {
-    val navController = rememberNavController()
+fun AppStructure(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
@@ -109,7 +110,8 @@ fun AppStructure() {
             modifier = Modifier.fillMaxSize(),
             topBar = { MyTopAppBar(onClickDrawer = { scope.launch { drawerState.open() } }) },
             content = { innerPadding ->
-                MyContent(innerPadding)
+               // MyContentMain(innerPadding)
+                MyContentProfile(innerPadding = innerPadding)
             },
             bottomBar = { MyBottomNavigation() },
             floatingActionButtonPosition = FabPosition.End,
@@ -118,235 +120,301 @@ fun AppStructure() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun LogoutFAB(navController: NavHostController) {
+    Row {
+        FloatingActionButton(
+            onClick = {
+                navController.navigate(NavigationActivity.LoginScreenMain.route)
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                .size(56.dp),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Icon(Icons.Default.ExitToApp, contentDescription = "Cerrar Sesión")
+        }
+    }
+}
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Composable
-    fun LogoutFAB(navController: NavHostController) {
-        Row {
-            FloatingActionButton(
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun MyContentMain(innerPadding: PaddingValues) {
+    val contextForToast = LocalContext.current.applicationContext
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+        val welcome = createRef()
+
+        Column(
+            modifier = Modifier
+                .padding(13.dp)
+                .constrainAs(welcome) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            Spacer(modifier = Modifier.padding(20.dp))
+            Text(
+                text = "La aplicación recibirá una actualización el 18/02/2024",
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(8.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            RealTimeDate(modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.padding(44.dp))
+
+            // Imagen del instituto
+            Image(
+                painter = painterResource(id = R.drawable.grao2),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.background)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "¡Bienvenido Alumno!",
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
                 onClick = {
-                    navController.navigate(NavigationActivity.LoginScreenMain.route)
+                    Toast.makeText(
+                        contextForToast,
+                        "Aún no se ha publicado tu horario, vuelve pronto !",
+                        Toast.LENGTH_LONG
+                    ).show()
                 },
                 modifier = Modifier
-                    .padding(16.dp)
-                    .size(56.dp),
-                containerColor = MaterialTheme.colorScheme.primary
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
-                Icon(Icons.Default.ExitToApp, contentDescription = "Cerrar Sesión")
+                Text(text = "Ver Horario", fontWeight = FontWeight.Bold)
             }
         }
     }
+}
+@Composable
+fun MyContentProfile(innerPadding: PaddingValues) {
+   ConstraintLayout(modifier = Modifier
+       .fillMaxSize()
+       .padding(16.dp)) {
+    Column(modifier = Modifier.padding(top = 60.dp)) {
+
+        Divider(modifier = Modifier
+            .padding(2.dp),
+            color = Color.LightGray)
+
+        Text(text = "Tú Perfil",
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.primary)
+
+        Divider(modifier = Modifier
+            .padding(2.dp)
+            .padding(top = 2.dp),
+            color = Color.LightGray)
+
+        StudentProfile()
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Composable
-    fun MyContent(innerPadding: PaddingValues) {
-        ConstraintLayout(
+    }
+
+
+   }
+}
+
+@Composable
+fun StudentProfile() {
+    Column(modifier = Modifier.padding(4.dp)) {
+        Text(text = "Nombre: " +
+        "\nApellidos: " + "\nNIA: " + "\nDNI: " + "\nEdad: " + "\nCorreo: "
+                + "\nDirección: " + "\nCódigo Postal: " + "\nAlumno desde: " + "\nCurso: ")
+
+
+    }
+
+    Divider(modifier = Modifier
+        .padding(2.dp)
+        .padding(top = 2.dp),
+        color = Color.LightGray)
+
+    ProtectedData()
+
+    }
+
+
+@Composable
+fun ProtectedData() {
+    Spacer(modifier = Modifier.padding(25.dp))
+    ConstraintLayout() {
+        val gva = createRef()
+        Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(0.dp).constrainAs(gva) {
+            bottom.linkTo(parent.bottom)
+            }) {
+        Text(text = "Datos protegidos por GVA",
+            modifier = Modifier.padding(top = 28.dp),
+            color = Color.Red
+        )
+        Image(
+            painter = painterResource(id = R.drawable.gva),
+            contentDescription = "GVA 2024",
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        ) {
-            val (welcome, date) = createRefs()
+                .padding(5.dp, top = 5.dp)
+                .height(88.dp)
+                .size(60.dp)
+        )
+    }
+}
+
+}
 
 
-            Column(
-                modifier = Modifier
-                    .padding(13.dp)
-                    .constrainAs(welcome) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            ) {
-                Spacer(modifier = Modifier.padding(20.dp))
-                Text(
-                    text = "La aplicación recibirá una actualización el 18/02/2024",
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    // .clickable {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyTopAppBar(onClickDrawer: () -> Unit) {
+    var isAppClosed by remember {
+        mutableStateOf(false)
+    }
 
-                    // },
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.padding(5.dp))
-                RealTimeDate(modifier = Modifier.align(Alignment.CenterHorizontally))
-                Spacer(modifier = Modifier.padding(44.dp))
-
-
-                // Imagen del instituto
-                Image(
-                    painter = painterResource(id = R.drawable.grao2),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                        .clip(shape = RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.background)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-
-                Text(
-                    text = "¡Bienvenido alumno!",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-                        //  Toast.makeText(
-                        //  LocalContext.current,
-                        //   "Todavía no hay un horario disponible, vuelve pronto!",
-                        //  Toast.LENGTH_SHORT
-                        //  ).show()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                ) {
-                    Text(text = "Ver Horario", fontWeight = FontWeight.Bold)
-                }
-
+    TopAppBar(
+        title = {
+            Text(
+                "Menú del Alumno",
+                fontWeight = FontWeight.Bold
+            )
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.LightGray),
+        navigationIcon = {
+            IconButton(onClick = { onClickDrawer() }) {
+                Icon(Icons.Filled.Menu, contentDescription = null)
             }
-
-        }
-    }
-
-    @Composable
-    fun showHorarioNotification() {
-        Toast.makeText(
-            LocalContext.current,
-            "Todavía no hay un horario disponible, vuelve pronto!",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun MyTopAppBar(onClickDrawer:() -> Unit) {
-        TopAppBar(
-            title = {
-                Text(
-                    "Menú del Alumno",
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.LightGray),
-            navigationIcon = {
-                IconButton(onClick = {onClickDrawer() }) {
-                    Icon(Icons.Filled.Menu, contentDescription = null) }
-            },
-            actions = {
-                IconButton(onClick = { }) {
+        },
+        actions = {
+            IconButton(onClick = { }) {
+                Column {
                     Icon(Icons.Filled.Info, contentDescription = null)
                     Text(
                         text = "Info",
-                        modifier = Modifier.padding(top = 29.dp),
+                        modifier = Modifier.padding(start = 2.dp),
                         fontWeight = FontWeight.Bold,
                         fontSize = 10.sp
                     )
                 }
-                Spacer(modifier = Modifier.size(6.dp))
-                IconButton(onClick = {}) {
+            }
+            Spacer(modifier = Modifier.size(6.dp))
+            IconButton(onClick = { isAppClosed = true }) {
+                Column {
                     Icon(Icons.Filled.Close, contentDescription = null)
                     Text(
                         text = "Salir",
-                        modifier = Modifier.padding(top = 29.dp),
+                        modifier = Modifier.padding(start = 1.dp),
                         fontWeight = FontWeight.Bold,
                         fontSize = 10.sp
                     )
                 }
-                Spacer(modifier = Modifier.size(6.dp))
             }
+            Spacer(modifier = Modifier.size(6.dp))
+        }
+    )
+}
+
+@Composable
+fun MyBottomNavigation() {
+    var index by rememberSaveable { mutableIntStateOf(0) }
+    NavigationBar(
+        containerColor = Color.LightGray,
+        contentColor = Color.White
+    ) {
+        NavigationBarItem(
+            selected = index == 0,
+            onClick = { index = 0 },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Horario del Alumno"
+                )
+            },
+            label = { Text("Enviar Correo") }
+        )
+        NavigationBarItem(
+            selected = index == 1,
+            onClick = { index = 1 },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Página principal"
+                )
+            },
+            label = { Text("Home") }
+        )
+        NavigationBarItem(
+            selected = index == 2,
+            onClick = { index = 2 },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Perfil del Alumno"
+                )
+            },
+            label = { Text("Mi Perfil") }
         )
     }
+}
 
-    @Composable
-    fun MyBottomNavigation() {
-        var index by rememberSaveable { mutableIntStateOf(0) }
-        NavigationBar(
-            containerColor = Color.LightGray,
-            contentColor = Color.White
-        ) {
-            NavigationBarItem(
-                selected = index == 0,
-                onClick = { index = 0 },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "Horario del Alumno"
-                    )
-                },
-                label = { Text("Enviar Correo") }
-            )
-            NavigationBarItem(
-                selected = index == 1,
-                onClick = { index = 1 },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Página principal"
-                    )
-                },
-                label = { Text("Home") }
-            )
-            NavigationBarItem(
-                selected = index == 2,
-                onClick = { index = 2 },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Perfil del Alumno"
-                    )
-                },
-                label = { Text("Mi Perfil") }
-            )
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun RealTimeDate(modifier: Modifier) {
+    var currentDateTime by remember { mutableStateOf(LocalDateTime.now()) }
+
+    LaunchedEffect(key1 = currentDateTime) {
+        while (true) {
+            delay(1000) // Actualiza cada segundo
+            currentDateTime = LocalDateTime.now()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Composable
-    fun RealTimeDate(modifier: Modifier) {
-        var currentDateTime by remember { mutableStateOf(LocalDateTime.now()) }
+    val formattedDate =
+        currentDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
 
-        LaunchedEffect(key1 = currentDateTime) {
-            while (true) {
-                delay(1000) // Actualiza cada segundo
-                currentDateTime = LocalDateTime.now()
-            }
-        }
+    Text(
+        text = "Fecha y Hora: $formattedDate",
+        modifier = modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp)),
+        color = Color.Black
+    )
+}
 
-        val formattedDate =
-            currentDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
-
-        Text(
-            text = "Fecha y Hora: $formattedDate",
-            modifier = Modifier
-                .padding(8.dp)
-                // .clickable { /* Acción al hacer clic */ }
-                .background(MaterialTheme.colorScheme.secondary)
-                .clip(RoundedCornerShape(8.dp)),
-            color = Color.White
-        )
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @Preview(showBackground = true)
-    @Composable
-    fun HomeStudentPreview() {
-        IESGRAOTheme {
-            ConstraintLayout {
-                AppStructure()
-            }
-
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun HomeStudentPreview() {
+    IESGRAOTheme {
+        ConstraintLayout {
+            val navController = rememberNavController()
+            AppStructure(navController = navController)
         }
     }
+}
+
 

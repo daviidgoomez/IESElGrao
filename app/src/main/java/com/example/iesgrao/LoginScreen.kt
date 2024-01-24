@@ -138,7 +138,7 @@ fun LoginScreen(navController: NavHostController) {
                     if(isValidCredentialsStudent(username, password)) {
                         errorMessage = null
                        // onLoginClicked(username, password)
-                        navController.navigate(NavigationActivity.HomeScreenStudent.route)
+                        navController.navigate(NavigationActivity.HomeScreenStudent.createRoute(username, password))
                     } else {
                         errorMessage = "Credenciales de usuario no válidas"
                     }
@@ -283,8 +283,6 @@ fun InformationText() {
                     bottom.linkTo(parent.bottom)
                 }
         )
-
-
 
     }
 }

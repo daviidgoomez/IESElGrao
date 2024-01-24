@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                         InformationText()
                     }
                     composable(NavigationActivity.HomeScreenStudent.route) {
-                        AppStructure()
+                        AppStructure(navigationController)
                     }
 
                     }
