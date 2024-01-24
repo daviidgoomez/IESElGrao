@@ -4,7 +4,8 @@ private val StudentCredentials = mapOf(
     "11955735" to "gom180703",
     "12345555" to "dam180703",
     "11234567" to "cms180703",
-    "11032178" to "mol160408"
+    "11032178" to "mol160408",
+    "admin" to "admin123"
 )
 
 private val TeacherCredentials = mapOf(

@@ -244,34 +244,29 @@ fun MyContentProfile(innerPadding: PaddingValues) {
 @Composable
 fun StudentProfile() {
     Column(modifier = Modifier.padding(4.dp)) {
-        Text(text = "Nombre: " +
-        "\nApellidos: " + "\nNIA: " + "\nDNI: " + "\nEdad: " + "\nCorreo: "
-                + "\nDirección: " + "\nCódigo Postal: " + "\nAlumno desde: " + "\nCurso: ")
-
-
+        Text(
+            text = "Nombre: " +
+                    "\nApellidos: " + "\nNIA: " + "\nDNI: " + "\nEdad: " + "\nCorreo: " +
+                    "\nDirección: " + "\nCódigo Postal: " + "\nAlumno desde: " + "\nCurso: "
+        )
     }
 
-    Divider(modifier = Modifier
-        .padding(2.dp)
-        .padding(top = 2.dp),
-        color = Color.LightGray)
-
-    ProtectedData()
-
-    }
+    Divider(
+        modifier = Modifier
+            .padding(2.dp)
+            .padding(top = 2.dp),
+        color = Color.LightGray
+    )
 
 
-@Composable
-fun ProtectedData() {
-    Spacer(modifier = Modifier.padding(25.dp))
-    ConstraintLayout() {
-        val gva = createRef()
-        Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(0.dp).constrainAs(gva) {
-            bottom.linkTo(parent.bottom)
-            }) {
-        Text(text = "Datos protegidos por GVA",
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 2.dp)
+    ) {
+        Text(
+            text = "Datos protegidos por GVA",
             modifier = Modifier.padding(top = 28.dp),
             color = Color.Red
         )
@@ -285,6 +280,12 @@ fun ProtectedData() {
         )
     }
 }
+
+
+
+@Composable
+fun ProtectedData() {
+
 
 }
 
