@@ -4,12 +4,15 @@ package com.example.iesgrao
 
 import android.annotation.SuppressLint
 import android.content.ClipData.Item
+import android.icu.text.SimpleDateFormat
 import android.os.Build
+import android.os.Looper
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,6 +31,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
@@ -36,6 +40,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -60,8 +65,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,21 +82,37 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.logging.Handler
 
 @Composable
-fun MyNavigationDrawer(onCloseDrawer: () -> Unit) {
+fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Unit) {
+    val tabs = listOf("Información del curso", "Profesores", "Asignaturas", "Satisfacción")
+
     Column(modifier = Modifier.padding(8.dp)) {
-        repeat(5) {
+        tabs.forEach { tab ->
             Text(
-                text = "Opción ${it + 1}",
+                text = tab,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
-                    .clickable { onCloseDrawer() }
+                    .clickable {
+                        // Cerrar el drawer al hacer clic
+                        onCloseDrawer()
+
+                        // Navegar a la pantalla correspondiente según la pestaña seleccionada
+                        when (tab) {
+                            "Información del curso" -> navController.navigate("cursoInfoScreen")
+                            "Profesores" -> navController.navigate("profesoresScreen")
+                            "Asignaturas" -> navController.navigate("asignaturasScreen")
+                            "Satisfacción" -> navController.navigate("satisfaccionScreen")
+                            // Puedes agregar más opciones según tus necesidades
+                        }
+                    }
             )
         }
     }
 }
+
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -101,7 +125,7 @@ fun AppStructure(navController: NavHostController) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                MyNavigationDrawer() { scope.launch { drawerState.close() } }
+                MyNavigationDrawer(navController = navController) { scope.launch { drawerState.close() } }
             }
         },
         gesturesEnabled = true
@@ -210,85 +234,6 @@ fun MyContentMain(innerPadding: PaddingValues) {
         }
     }
 }
-@Composable
-fun MyContentProfile(innerPadding: PaddingValues) {
-   ConstraintLayout(modifier = Modifier
-       .fillMaxSize()
-       .padding(16.dp)) {
-    Column(modifier = Modifier.padding(top = 60.dp)) {
-
-        Divider(modifier = Modifier
-            .padding(2.dp),
-            color = Color.LightGray)
-
-        Text(text = "Tú Perfil",
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.primary)
-
-        Divider(modifier = Modifier
-            .padding(2.dp)
-            .padding(top = 2.dp),
-            color = Color.LightGray)
-
-        StudentProfile()
-
-
-    }
-
-
-   }
-}
-
-@Composable
-fun StudentProfile() {
-    Column(modifier = Modifier.padding(4.dp)) {
-        Text(
-            text = "Nombre: " +
-                    "\nApellidos: " + "\nNIA: " + "\nDNI: " + "\nEdad: " + "\nCorreo: " +
-                    "\nDirección: " + "\nCódigo Postal: " + "\nAlumno desde: " + "\nCurso: "
-        )
-    }
-
-    Divider(
-        modifier = Modifier
-            .padding(2.dp)
-            .padding(top = 2.dp),
-        color = Color.LightGray
-    )
-
-
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 2.dp)
-    ) {
-        Text(
-            text = "Datos protegidos por GVA",
-            modifier = Modifier.padding(top = 28.dp),
-            color = Color.Red
-        )
-        Image(
-            painter = painterResource(id = R.drawable.gva),
-            contentDescription = "GVA 2024",
-            modifier = Modifier
-                .padding(5.dp, top = 5.dp)
-                .height(88.dp)
-                .size(60.dp)
-        )
-    }
-}
-
-
-
-@Composable
-fun ProtectedData() {
-
-
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -296,6 +241,7 @@ fun MyTopAppBar(onClickDrawer: () -> Unit) {
     var isAppClosed by remember {
         mutableStateOf(false)
     }
+    val uriHandler = LocalUriHandler.current
 
     TopAppBar(
         title = {
@@ -311,7 +257,9 @@ fun MyTopAppBar(onClickDrawer: () -> Unit) {
             }
         },
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+               uriHandler.openUri(uri = "https://portal.edu.gva.es/ieselgrao/?page_id=1393")
+            }) {
                 Column {
                     Icon(Icons.Filled.Info, contentDescription = null)
                     Text(
@@ -338,10 +286,11 @@ fun MyTopAppBar(onClickDrawer: () -> Unit) {
         }
     )
 }
-
 @Composable
 fun MyBottomNavigation() {
     var index by rememberSaveable { mutableIntStateOf(0) }
+    val uriHandler = LocalUriHandler.current
+
     NavigationBar(
         containerColor = Color.LightGray,
         contentColor = Color.White
@@ -352,7 +301,11 @@ fun MyBottomNavigation() {
             icon = {
                 Icon(
                     imageVector = Icons.Default.Email,
-                    contentDescription = "Horario del Alumno"
+                    contentDescription = "Enviar un correo",
+                    modifier = Modifier
+                        .clickable {uriHandler.openUri(
+                            uri = "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Ftakeout.google.com%2F%3Fhl%3Des&followup=https%3A%2F%2Ftakeout.google.com%2F%3Fhl%3Des&hl=es&ifkv=ASKXGp36HjKbV_EBFgga_lSQXUQLZrmGEFlX5pOidd8CmME8D8TGFG1uUug1e99sq9i_xQnMUV9fZw&osid=1&passive=1209600&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S-334634640%3A1706123367719211&theme=glif")}
+
                 )
             },
             label = { Text("Enviar Correo") }
@@ -381,6 +334,7 @@ fun MyBottomNavigation() {
         )
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

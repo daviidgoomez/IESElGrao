@@ -2,12 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="HomeStudentPreview">
-        <State />
-      </entry>
-      <entry key="MyContentProfile">
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>

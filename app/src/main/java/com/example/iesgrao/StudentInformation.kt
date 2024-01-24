@@ -15,6 +15,7 @@ data class StudentInformation(
     val edad: Int,
     val fecha_alta: Date,
     val curso: CourseInformation
+
 )
 val students = mutableListOf(
     StudentInformation(
