@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(false)
                 }
 
-                // Esta función bloquea que la app pueda ejecutarse de manera horizontal
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
                 NavHost(
                     navController = navigationController,
