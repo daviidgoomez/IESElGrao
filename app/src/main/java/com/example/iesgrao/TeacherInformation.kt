@@ -1,5 +1,6 @@
 package com.example.iesgrao
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import java.util.Date
 
@@ -15,6 +16,7 @@ data class TeacherInformation(
     val fecha_inicio: Date
 )
 
+@SuppressLint("SimpleDateFormat")
 val teachers = mutableListOf(
     TeacherInformation(
         "12345678J", "SoyJordiCrack", "Jordi",

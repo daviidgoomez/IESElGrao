@@ -1,5 +1,6 @@
 package com.example.iesgrao
 
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -31,6 +32,10 @@ class MainActivity : ComponentActivity() {
                 var isAppClosed by remember {
                     mutableStateOf(false)
                 }
+
+                // Esta función bloquea que la app pueda ejecutarse de manera horizontal
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
                 NavHost(
                     navController = navigationController,
                     startDestination = NavigationActivity.LoginScreenMain.route

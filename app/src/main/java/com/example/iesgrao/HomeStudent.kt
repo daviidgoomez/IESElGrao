@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,31 +87,50 @@ import java.util.logging.Handler
 
 @Composable
 fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Unit) {
-    val tabs = listOf("Información del curso", "Profesores", "Asignaturas", "Satisfacción")
+    val tabs = listOf(
+        "Información del curso",
+        "Profesores",
+        "Asignaturas",
+        "Satisfacción",
+        "Erasmus +"
+    )
 
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         tabs.forEach { tab ->
-            Text(
+            DrawerItem(
                 text = tab,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-                    .clickable {
-                        // Cerrar el drawer al hacer clic
-                        onCloseDrawer()
+                onClick = {
+                    onCloseDrawer()
 
-                        // Navegar a la pantalla correspondiente según la pestaña seleccionada
-                        when (tab) {
-                            "Información del curso" -> navController.navigate("cursoInfoScreen")
-                            "Profesores" -> navController.navigate("profesoresScreen")
-                            "Asignaturas" -> navController.navigate("asignaturasScreen")
-                            "Satisfacción" -> navController.navigate("satisfaccionScreen")
-                            // Puedes agregar más opciones según tus necesidades
-                        }
+                    // Navegar a la pantalla correspondiente según la pestaña seleccionada
+                    when (tab) {
+                        "Información del curso" -> navController.navigate("cursoInfoScreen")
+                        "Profesores" -> navController.navigate("profesoresScreen")
+                        "Asignaturas" -> navController.navigate("asignaturasScreen")
+                        "Satisfacción" -> navController.navigate("satisfaccionScreen")
+                        "Erasmus +" -> navController.navigate("erasmusScreen")
                     }
+                }
             )
         }
     }
+}
+
+@Composable
+fun DrawerItem(text: String, onClick: () -> Unit) {
+    Text(
+        text = text,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 16.dp)
+            .clickable { onClick() },
+    )
 }
 
 
