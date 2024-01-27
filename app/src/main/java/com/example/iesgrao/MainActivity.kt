@@ -59,6 +59,12 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationActivity.StudentTeachers.route) {
                         MyTeachers(navigationController)
                     }
+                    composable(NavigationActivity.ErasmusPlus.route) {
+                        MyErasmus(navigationController)
+                    }
+                    composable(NavigationActivity.ErasmusAccreditations.route) {
+                        MyAccreditation(navigationController)
+                    }
                     }
             }
 

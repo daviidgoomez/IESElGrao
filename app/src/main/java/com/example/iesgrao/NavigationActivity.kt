@@ -9,6 +9,7 @@ sealed class NavigationActivity (val route:String) {
     object StudentSubjects:NavigationActivity("Subjects")
     object StudentSatisfaction:NavigationActivity("Satisfaction")
     object ErasmusPlus:NavigationActivity("Erasmus")
+    object ErasmusAccreditations:NavigationActivity("ErasmusAccreditations")
 
 
     // ---------------------------------- //
