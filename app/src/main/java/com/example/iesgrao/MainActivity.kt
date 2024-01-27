@@ -1,5 +1,6 @@
 package com.example.iesgrao
 
+import MyTeachers
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
@@ -52,7 +53,12 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationActivity.HomeScreenStudent.route) {
                         AppStructure(navigationController)
                     }
-
+                    composable(NavigationActivity.CourseInfo.route) {
+                        MyInfoContent(navigationController)
+                    }
+                    composable(NavigationActivity.StudentTeachers.route) {
+                        MyTeachers(navigationController)
+                    }
                     }
             }
 

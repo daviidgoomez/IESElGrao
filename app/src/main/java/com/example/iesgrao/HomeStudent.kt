@@ -102,23 +102,33 @@ fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Un
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
+
         tabs.forEach { tab ->
             DrawerItem(
                 text = tab,
                 onClick = {
                     onCloseDrawer()
 
-                    // Navegar a la pantalla correspondiente según la pestaña seleccionada
                     when (tab) {
-                        "Información del curso" -> navController.navigate("cursoInfoScreen")
-                        "Profesores" -> navController.navigate("profesoresScreen")
-                        "Asignaturas" -> navController.navigate("asignaturasScreen")
-                        "Satisfacción" -> navController.navigate("satisfaccionScreen")
-                        "Erasmus +" -> navController.navigate("erasmusScreen")
+                        "Información del curso" -> navController.navigate(NavigationActivity.CourseInfo.route)
+                        "Profesores" -> navController.navigate(NavigationActivity.StudentTeachers.route)
+                        "Asignaturas" -> navController.navigate(NavigationActivity.StudentSubjects.route)
+                        "Satisfacción" -> navController.navigate(NavigationActivity.StudentSatisfaction.route)
+                        "Erasmus +" -> navController.navigate(NavigationActivity.ErasmusPlus.route)
                     }
                 }
             )
         }
+
+        Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
+
+        Text(
+            text = "© 2024 IES El Grao",
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally)
+        )
     }
 }
 
@@ -126,10 +136,10 @@ fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Un
 fun DrawerItem(text: String, onClick: () -> Unit) {
     Text(
         text = text,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 16.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .padding(16.dp)
     )
 }
 
@@ -154,8 +164,8 @@ fun AppStructure(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             topBar = { MyTopAppBar(onClickDrawer = { scope.launch { drawerState.open() } }) },
             content = { innerPadding ->
-               // MyContentMain(innerPadding)
-                MyContentProfile(innerPadding = innerPadding)
+                MyContentMain(innerPadding)
+               // MyContentProfile(innerPadding = innerPadding)
             },
             bottomBar = { MyBottomNavigation() },
             floatingActionButtonPosition = FabPosition.End,

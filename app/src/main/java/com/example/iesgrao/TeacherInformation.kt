@@ -28,7 +28,7 @@ val teachers = mutableListOf(
     ),
     TeacherInformation(
         "98765432X", "TeacherPass123", "David",
-        "Antolín", "antolíndavid2ieselgrao.org", "Cabanyal",
+        "Antolín", "antolindavid@ieselgrao.org", "Cabanyal",
         "28001", 33, SimpleDateFormat("dd/MM/yyyy").parse("15/05/2021"),
         courses[1], subjects[1]
     ),
