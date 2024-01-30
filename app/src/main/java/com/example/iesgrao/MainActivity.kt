@@ -71,6 +71,9 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationActivity.SendScreen.route) {
                         MySend(navigationController)
                     }
+                    composable(NavigationActivity.StudentSubjects.route) {
+                        MySubjects(navigationController)
+                    }
                     }
             }
 

@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
@@ -149,6 +151,26 @@ fun MoreOptions(navController: NavController) {
                     fontWeight = FontWeight.Bold)
             }
         )
+
+        Button(
+            onClick = {
+                navController.navigate(NavigationActivity.HomeScreenStudent.route)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(
+                text = "Volver al Home",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+
         Image(
             painter = painterResource(id = R.drawable.erasmus),
             contentDescription = null,

@@ -300,19 +300,8 @@ fun MyTopAppBar(onClickDrawer: () -> Unit) {
                     )
                 }
             }
-            Spacer(modifier = Modifier.size(6.dp))
-            IconButton(onClick = { isAppClosed = true }) {
-                Column {
-                    Icon(Icons.Filled.Close, contentDescription = null)
-                    Text(
-                        text = "Salir",
-                        modifier = Modifier.padding(start = 1.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.size(6.dp))
+
+            Spacer(modifier = Modifier.size(27.dp))
         }
     )
 }

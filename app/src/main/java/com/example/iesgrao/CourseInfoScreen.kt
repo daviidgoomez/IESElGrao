@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
@@ -51,6 +52,10 @@ fun MyInfoContent(navController: NavHostController) {
         item {
             InfoList()
         }
+
+        item {
+            HomeButton(navController = navController)
+        }
     }
 }
 
@@ -59,11 +64,13 @@ fun InfoList() {
     val courseInfo = courses.getOrNull(1)
 
     courseInfo?.let {
+        Spacer(modifier = Modifier.padding(5.dp))
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
+
             Column(modifier = Modifier.padding(6.dp)) {
                 InfoItem(text = it.informacion.toString())
             }
@@ -84,6 +91,27 @@ fun InfoItem(text: String) {
             color = Color.Black,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(10.dp)
+        )
+    }
+}
+
+@Composable
+fun HomeButton(navController: NavHostController) {
+    Button(
+        onClick = {
+            navController.navigate(NavigationActivity.HomeScreenStudent.route)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    ) {
+        Text(
+            text = "Volver al Home",
+            color = Color.White,
+            fontWeight = FontWeight.Bold
         )
     }
 }
