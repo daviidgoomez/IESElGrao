@@ -64,6 +64,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -151,6 +152,7 @@ fun DrawerItem(text: String, onClick: () -> Unit) {
 fun AppStructure(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    var currentScreen by rememberSaveable { mutableStateOf(HomeStudentContent.Home) }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -164,10 +166,12 @@ fun AppStructure(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             topBar = { MyTopAppBar(onClickDrawer = { scope.launch { drawerState.open() } }) },
             content = { innerPadding ->
-                MyContentMain(innerPadding)
-               // MyContentProfile(innerPadding = innerPadding)
+                when (currentScreen) {
+                    HomeStudentContent.Home -> MyContentMain(innerPadding)
+                    HomeStudentContent.Profile -> MyContentProfile(innerPadding)
+                }
             },
-            bottomBar = { MyBottomNavigation() },
+            bottomBar = { MyBottomNavigation(currentScreen = currentScreen, onTabSelected = { screen -> currentScreen = screen }) },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = { LogoutFAB(navController = navController) }
         )
@@ -306,8 +310,8 @@ fun MyTopAppBar(onClickDrawer: () -> Unit) {
     )
 }
 @Composable
-fun MyBottomNavigation() {
-    var index by rememberSaveable { mutableIntStateOf(0) }
+fun MyBottomNavigation(currentScreen: HomeStudentContent, onTabSelected: (HomeStudentContent) -> Unit) {
+    var index by rememberSaveable { mutableIntStateOf(1) }
     val uriHandler = LocalUriHandler.current
 
     NavigationBar(
@@ -330,8 +334,8 @@ fun MyBottomNavigation() {
             label = { Text("Enviar Correo") }
         )
         NavigationBarItem(
-            selected = index == 1,
-            onClick = { index = 1 },
+            selected = currentScreen == HomeStudentContent.Home,
+            onClick = { onTabSelected(HomeStudentContent.Home) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
@@ -341,8 +345,8 @@ fun MyBottomNavigation() {
             label = { Text("Home") }
         )
         NavigationBarItem(
-            selected = index == 2,
-            onClick = { index = 2 },
+            selected = currentScreen == HomeStudentContent.Profile,
+            onClick = { onTabSelected(HomeStudentContent.Profile) },
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
