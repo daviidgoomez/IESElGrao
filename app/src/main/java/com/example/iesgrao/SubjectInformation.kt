@@ -22,7 +22,7 @@ val subjects = mutableListOf(
             "de las Bases de Datos relacionales" , courses[1], R.drawable.base_de_datos),
     SubjectInformation("subject003","Sistemas de Gestión Empresarial",200,
         "Conocimiento sobre lo que es un ERP, aprendiazaje de python y desarollo de módulos de" +
-                "Odoo", courses[1], R.drawable.odoo),
+                " Odoo", courses[1], R.drawable.odoo),
     SubjectInformation("subject004","Programación de Servicios y Procesos",160,
         "Lanzamiento y ejecución de hilos en java", courses[1], R.drawable.psp)
 )

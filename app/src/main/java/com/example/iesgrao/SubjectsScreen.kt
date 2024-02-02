@@ -50,7 +50,7 @@ fun MySubjects(navController: NavHostController) {
 
         item { SubjectTitle() }
         items(subjects) { subject ->
-            SubjectContent(subject = subject)
+            SubjectContent(subject = subject, navController)
         }
         item { SubjectHome(navController = navController) }
     }
@@ -80,12 +80,12 @@ fun SubjectTitle() {
 }
 
 @Composable
-fun SubjectContent(subject: SubjectInformation) {
+fun SubjectContent(subject: SubjectInformation, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { }
+            .clickable { navController.navigate(NavigationActivity.SubjectWork.route) }
             .clip(RoundedCornerShape(8.dp)),
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
     ) {

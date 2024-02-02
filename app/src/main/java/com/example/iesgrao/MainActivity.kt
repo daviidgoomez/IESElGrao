@@ -74,6 +74,9 @@ class MainActivity : ComponentActivity() {
                     composable(NavigationActivity.StudentSubjects.route) {
                         MySubjects(navigationController)
                     }
+                    composable(NavigationActivity.SubjectWork.route) {
+                        MyWork(navigationController)
+                    }
                     }
             }
 
