@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.datafiles
 
 private val StudentCredentials = mapOf(
     "11955735" to "gom180703",

@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.mainscreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.iesgrao.R
+import com.example.iesgrao.datafiles.isValidCredentialsStudent
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

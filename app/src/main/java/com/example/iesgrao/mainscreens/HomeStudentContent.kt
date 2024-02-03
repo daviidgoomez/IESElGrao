@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.mainscreens
 
 enum class HomeStudentContent {
     Home,

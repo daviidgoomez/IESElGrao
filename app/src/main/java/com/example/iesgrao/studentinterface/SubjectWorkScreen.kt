@@ -1,5 +1,7 @@
-package com.example.iesgrao
+package com.example.iesgrao.studentinterface
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,63 +20,68 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.iesgrao.mainscreens.NavigationActivity
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 @Composable
-fun MySend(navController: NavHostController) {
+fun MyWork(navController: NavHostController) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        val content = createRef()
+        val text = createRef()
+
         Column(
             modifier = Modifier
-                .constrainAs(content) {
+                .constrainAs(text) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                 }
                 .padding(16.dp)
+
         ) {
-            ExitSend()
-            HomeButton(navController = navController)
+            NoWork()
+            ReturnToSubjects(navController = navController)
         }
     }
 }
 
 @Composable
-fun ExitSend() {
-    Text(
-        text = "Cuestionario enviado con éxito. ¡Gracias!",
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
+fun NoWork() {
+    Text(modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 16.dp),
+        text = "No tienes tareas pendientes",
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
+        fontSize = 21.sp,
         color = MaterialTheme.colorScheme.primary,
         textAlign = TextAlign.Center
     )
 }
 
 @Composable
-fun HomeButton(navController: NavController) {
+fun ReturnToSubjects(navController: NavController) {
     FloatingActionButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
-        onClick = { navController.navigate(NavigationActivity.HomeScreenStudent.route) }
+        onClick = { navController.navigate(NavigationActivity.StudentSubjects.route) }
     ) {
-        Text(text = "Volver al Home")
+        Text(text = "Volver a Asignaturas")
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun SendPreview() {
+fun SubjectsWorkPreview() {
     IESGRAOTheme {
-        val navController = rememberNavController()
-        MySend(navController = navController)
+        ConstraintLayout {
+            val navController = rememberNavController()
+            MyWork(navController = navController)
+        }
     }
 }

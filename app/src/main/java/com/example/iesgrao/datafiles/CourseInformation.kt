@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.datafiles
 
 data class CourseInformation(
     val nombre_curso: String,

@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.studentinterface
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.iesgrao.mainscreens.NavigationActivity
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 @Composable

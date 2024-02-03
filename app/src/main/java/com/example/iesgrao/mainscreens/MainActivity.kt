@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.mainscreens
 
 import MyTeachers
 import android.content.pm.ActivityInfo
@@ -7,18 +7,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.iesgrao.studentinterface.AppStructure
+import com.example.iesgrao.studentinterface.MyAccreditation
+import com.example.iesgrao.studentinterface.MyErasmus
+import com.example.iesgrao.studentinterface.MyInfoContent
+import com.example.iesgrao.studentinterface.MySatisfaction
+import com.example.iesgrao.studentinterface.MySend
+import com.example.iesgrao.studentinterface.MySubjects
+import com.example.iesgrao.studentinterface.MyWork
 import com.example.iesgrao.ui.theme.IESGRAOTheme
 
 

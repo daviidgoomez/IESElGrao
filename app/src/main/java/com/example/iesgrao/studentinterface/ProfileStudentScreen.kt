@@ -1,4 +1,4 @@
-package com.example.iesgrao
+package com.example.iesgrao.studentinterface
 
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.Image
@@ -26,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.iesgrao.R
+import com.example.iesgrao.datafiles.students
 
 @Composable
 fun MyContentProfile(innerPadding: PaddingValues) {
